@@ -6,8 +6,8 @@ const app = express();
 
 mongoose.connect('mongodb+srv://buscaDev:buscaDev@cluster0-f338z.mongodb.net/bDev?retryWrites=true&w=majority', {
     useNewUrlParser: true,
-    useUnifiedTopology: true
-})
+    useUnifiedTopology: true,
+});
 
 app.use(express.json());
 
