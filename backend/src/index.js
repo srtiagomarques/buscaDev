@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+//yarn add cors
+const cors = require('cors');
 const routes = require('./routes');
 
 const app = express();
@@ -9,6 +11,11 @@ mongoose.connect('mongodb+srv://buscaDev:buscaDev@cluster0-f338z.mongodb.net/bDe
     useUnifiedTopology: true,
 });
 
+// apontar o front para comunicação com o back (necessário adicionar o cors)
+// Libera acesso externo para todo tipo de aplicação
+app.use(cors());
+// Libera acesso externo somente para esse endereço
+// app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 
 // Métodos HTTP: GET, POST, PUT, DELETE.

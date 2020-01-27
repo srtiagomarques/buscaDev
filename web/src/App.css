@@ -7,3 +7,25 @@
     flex-direction: row;
     align-items: flex-start;
 }
+
+/* espaçamento entre o menu de cadastro e os perfis */
+#app main {
+    margin-left: 30px;
+}
+
+/* Aplicação da responsividade */
+@media (max-width: 1000px){
+    /* Muda layout de linha (row) para coluna (column) */
+    #app {
+        flex-direction: column;
+    }
+    /* Tira espaçamento entre o menu de cadastro e os perfis e insere uma margem acima deles */
+    #app main {
+        margin-left: 0;
+        margin-top: 30px;
+    }
+    /* deixa o cadastro ocupando 100% de sua linha */
+    #app aside {
+        width: 100%;
+    }
+}
