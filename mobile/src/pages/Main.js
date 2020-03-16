@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { StyleSheet, Image, View, Text, TextInput, TouchableOpacity } from 'react-native';
 import MapView, { Marker, Callout } from 'react-native-maps';
 import { requestPermissionAsync, getCurrentPositionAsync } from 'expo-location';
+import * as Permissions from 'expo-permissions';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import api from '../services/api';
@@ -12,10 +13,10 @@ function Main({ navigation }) {
     const [techs, setTechs] = useState('');
     useEffect(() => {
         async function loadInitialPosition() {
-            const { granted } = await requestPermissionAsync();
+            const { granted } = await Permissions.askAsync(Permissions.LOCATION);
             if (granted) {
                 const { coords } = await getCurrentPositionAsync({
-                    enableHighAccuracy: false
+                    enableHighAccuracy: true
                 });
                 const { latitude, longitude } = coords;
                 setCurrentRegion({
@@ -53,19 +54,12 @@ function Main({ navigation }) {
     }
     return (
         <>
-            <MapView
-                onRegionChangeComplete={handleRegionChenged}
-                initialRegion={currentRegion}
-                style={styles.map}
-            >
+            <MapView onRegionChangeComplete={handleRegionChenged} initialRegion={currentRegion} style={styles.map}>
                 {devs.map(dev => (
-                    <Marker
-                        key={dev._id}
-                        coordinate={{
-                            latitude: dev.location.coordinates[1],
-                            longitude: dev.location.coordinates[0]
-                        }}
-                    >
+                    <Marker key={dev._id} coordinate={{
+                        latitude: dev.location.coordinates[1],
+                        longitude: dev.location.coordinates[0]
+                    }}>
                         <Image
                             style={styles.avatar}
                             source={{ uri: dev.avatar_url }}
@@ -73,7 +67,7 @@ function Main({ navigation }) {
                         <Callout onPress={() => {
                             navigation.navigate('Profile', { github_username: dev.github_username });
                         }}>
-                            <View style={styles.Callout}>
+                            <View style={styles.callout}>
                                 <Text style={styles.devName}>{dev.name}</Text>
                                 <Text style={styles.devBio}>{dev.bio}</Text>
                                 <Text style={styles.devTechs}>{dev.techs.join(', ')}</Text>
