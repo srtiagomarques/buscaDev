@@ -1,6 +1,7 @@
 const axios = require('axios');
 const Dev = require('../models/Dev');
 const parseStringAsArray = require('../utils/parseStringAsArray');
+const { findConnections, sendMessage } = require('../websocket');
 
 // index: mostrar uma lista, show: mostrar único, store: criar, update: alterar, destroy: excluir.
 
@@ -31,7 +32,7 @@ module.exports = {
             const location = {
                 type: 'Point',
                 coordinates: [longitude, latitude],
-            }
+            };
 
             dev = await Dev.create({
                 github_username,
@@ -41,9 +42,15 @@ module.exports = {
                 techs: techsArray,
                 location,
             })
+            //Filtrar as conexões que estão há no máximo 10km de distândia
+            // E que o dev tenha ao menos uma das tecnologias filtradas
+            const sendSocketMessageTo = findConnections(
+                { latitude, longitude },
+                techsArray,
+            )
+            console.log(sendSocketMessageTo);
+            sendMessage(sendSocketMessageTo, 'new-dev', dev);
         }
-
-
         return response.json(dev);
     },
 
